@@ -6,18 +6,13 @@ class MeetingApiService {
 
   MeetingApiService(this.networkService);
 
-  Future<Map<String,dynamic>> createMeeting({
+  Future<Map<String, dynamic>> createMeeting({
     required String type,
     String? meetingId,
   }) async {
     return await networkService.post(
       ApiConstants.meetings,
-      data: {
-        "type": type,
-        if (meetingId != null) "meeting_id": meetingId,
-      },
+      data: {"type": type, if (meetingId != null) "meeting_id": meetingId},
     );
-
-
   }
 }

@@ -1,213 +1,380 @@
-# Hipster Assessment – Amazon Chime Video Calling
+# Hipster Video Calling Experience Assessment
 
 ## Overview
 
-This project implements a video calling application in Flutter using Amazon Chime APIs. The application follows **Clean Architecture** principles with **Riverpod** for state management, ensuring a scalable, maintainable, and testable codebase.
+This project is a Flutter-based video meeting application built as part of the Hipster assessment. The application integrates with Amazon Chime meeting APIs to create and join meetings while following a clean, modular architecture using Riverpod for state management.
 
-The application communicates with the backend to create or join Amazon Chime meetings, parses the meeting details, and attempts to initialize the native meeting session.
-
----
-
-# Project Architecture
-
-The project is organized using Clean Architecture with clear separation of responsibilities:
-
-* **Presentation Layer**
-
-    * Screens
-    * Riverpod Providers
-    * State Notifiers
-    * UI State Management
-
-* **Data Layer**
-
-    * Repository
-    * API Client (Dio)
-    * Models
-    * JSON Serialization
-
-* **Core Layer**
-
-    * Routing (GoRouter)
-    * Network Handling
-    * Error Handling
-    * Utility Classes
+The implementation focuses on maintainability, separation of concerns, and scalability while providing a responsive user interface.
 
 ---
 
-# Technologies Used
+# Features Implemented
 
-* Flutter
-* Riverpod (State Management)
-* Dio (REST API)
-* GoRouter (Navigation)
-* json_serializable
-* Freezed Annotations
-* Amazon Chime Meeting APIs
-* flutter_amazon_chime (Native Wrapper)
+### Meeting Management
 
----
+- Create an Instant Meeting
+- Schedule a Meeting (UI workflow)
+- Join an existing meeting using Meeting ID
+- Display created Meeting ID
+- Maintain a list of scheduled meetings
+- Join a scheduled meeting
+- Loading indicator during API calls
+- Error handling using SnackBars
 
-# Implemented Features
+### User Interface
 
-## Architecture
-
-* ✅ Clean Architecture
-* ✅ Riverpod State Management
-* ✅ StateNotifier-based business logic
-* ✅ Repository Pattern
-* ✅ GoRouter Navigation
-* ✅ Centralized API handling
-* ✅ JSON Serialization using `json_serializable`
+- Responsive Home Screen
+- Meeting creation options using Bottom Sheet
+- Scheduled Meetings screen
+- Meeting details display
+- Material Design based UI
 
 ---
 
-## Meeting Flow
+# Project Structure
 
-Implemented the following workflow:
+```
+lib/
+│
+├── core/
+│   ├── network/
+│   ├── routes/
+│   └── utils/
+│
+├── features/
+│   └── meeting/
+│       ├── data/
+│       │   ├── api/
+│       │   ├── models/
+│       │   ├── repository/
+│       │   └── mappers/
+│       │
+│       ├── presentation/
+│       │   ├── screens/
+│       │   └── widgets/
+│       │
+│       └── providers/
+│
+└── main.dart
+```
 
-1. Create Meeting
-2. Join Existing Meeting
-3. Parse complete Meeting Response
-4. Store Meeting State using Riverpod
-5. Navigate to Meeting Screen
-6. Initialize Amazon Chime Session
+The project follows feature-first organization where each feature contains its own presentation, business logic, repository, and models.
 
 ---
 
-## API Integration
+# Setup Instructions
 
-Successfully integrated:
+## 1. Clone the repository
 
-* ✅ Create Meeting API
-* ✅ Join Meeting API
+```bash
+git clone <repository_url>
+```
 
-The backend returns:
+---
 
-* Meeting
-* Attendee
-* Media Placement
-* Meeting Features
-* Capabilities
-* Join Token
+## 2. Install packages
 
-All response models are implemented and parsed successfully.
+```bash
+flutter pub get
+```
+
+---
+
+## 3. Generate model files
+
+```bash
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+---
+
+## 4. Configure Environment
+
+Create a `.env` file in the project root and configure the required API endpoint.
+
+Example:
+
+```
+BASE_URL=https://assess.hipster-dev.com/api
+```
+
+---
+
+## 5. Run the application
+
+```bash
+flutter run
+```
 
 ---
 
 # State Management
 
-The application uses **Riverpod** for state management.
+This project uses **Riverpod**.
 
-Implemented using:
+Riverpod is responsible for:
 
-* StateNotifier
-* Immutable MeetingState
-* Provider-based dependency injection
+- Managing application state
+- API request handling
+- Loading state
+- Error state
+- Meeting state
+- Scheduled meetings list
+- Navigation triggers
 
-State includes:
+The main provider is:
 
-* Loading
-* Connected
-* Disconnected
-* Error handling
-* Meeting details
-* Event logs
+```
+MeetingNotifier
+```
 
----
+which exposes a `MeetingState` object containing:
 
-# Application Flow
-
-1. User taps **Create Meeting**
-2. Backend creates Amazon Chime Meeting
-3. Flutter receives meeting response
-4. Response is mapped into models
-5. Riverpod updates application state
-6. User is navigated to Meeting Screen
-7. Amazon Chime initialization starts
-
----
-
-# Current Blocker
-
-The backend integration completes successfully, and the application reaches the native Amazon Chime initialization stage.
-
-However, the native meeting session never becomes active.
-
-Observed runtime logs include:
-
-* `Devices available: []`
-* `Failed to get initial audio device`
-* `Mute returned false`
-
-Because the meeting never becomes active, the meeting screen remains in the loading state.
+- Current Meeting
+- Meeting Token Response
+- Loading Status
+- Connection Status
+- Scheduled Meetings
+- Event Logs
+- Error Messages
 
 ---
 
-# Investigation Performed
+# Architecture Overview
 
-Verified the following:
+The application follows a layered architecture.
 
-* ✅ Backend API is working correctly.
-* ✅ Meeting creation succeeds.
-* ✅ Join meeting succeeds.
-* ✅ Meeting response is parsed correctly.
-* ✅ JoinToken is received.
-* ✅ Meeting ID is received.
-* ✅ Attendee ID is received.
-* ✅ Navigation works correctly.
-* ✅ Camera permission granted.
-* ✅ Microphone permission granted.
-* ✅ Riverpod state updates correctly.
-* ✅ Meeting Screen opens successfully.
-* ✅ Native Chime initialization is invoked.
+```
+Presentation Layer
+        │
+        ▼
+Riverpod StateNotifier
+        │
+        ▼
+Repository Layer
+        │
+        ▼
+API Service
+```
 
-The issue occurs after the Flutter application hands over control to the native Chime plugin.
+### Presentation
+
+Responsible for:
+
+- UI
+- User interactions
+- Navigation
+
+### State Layer
+
+`MeetingNotifier`
+
+Responsible for:
+
+- Business logic
+- Calling repository methods
+- Managing loading/error state
+- Updating UI state
+
+### Repository
+
+Responsible for:
+
+- API communication
+- Parsing API responses
+- Returning Result objects
+
+### Models
+
+Separate models are maintained for different API responses.
+
+- MeetingResponse
+- MeetingTokenResponse
+- ScheduledMeeting
 
 ---
 
-# Root Cause Analysis
+# API Flow
 
-The current implementation uses:
+## Create Meeting
 
-`flutter_amazon_chime: ^0.1.2`
-
-The backend integration functions correctly, but the third-party Flutter wrapper fails during native meeting initialization.
-
-Based on the investigation, the blocker appears to be inside the native plugin rather than in:
-
-* Flutter application code
-* Riverpod implementation
-* API integration
-* Backend meeting creation
-
----
-
-# Planned Next Step
-
-To eliminate dependency on the third-party wrapper, the next implementation approach would be:
-
-* Integrate the official Amazon Chime Android SDK using Platform Channels.
-* Integrate the official Amazon Chime iOS SDK using Platform Channels.
-* Expose native meeting APIs to Flutter.
-* Replace the existing `flutter_amazon_chime` package with the official SDK implementation.
-
-This approach would provide improved stability, better SDK support, and full access to Amazon Chime features.
+```
+User
+    │
+    ▼
+Create Meeting
+    │
+    ▼
+Meeting API
+    │
+    ▼
+MeetingResponse
+    │
+    ▼
+Riverpod State
+    │
+    ▼
+Navigate to Meeting Screen
+```
 
 ---
 
-# Project Status
+## Join Meeting
 
-| Module                      | Status                                  |
-| --------------------------- | --------------------------------------- |
-| Clean Architecture          | ✅ Completed                             |
-| Riverpod State Management   | ✅ Completed                             |
-| Repository Pattern          | ✅ Completed                             |
-| API Integration             | ✅ Completed                             |
-| Meeting Creation            | ✅ Completed                             |
-| Meeting Joining             | ✅ Completed                             |
-| JSON Model Parsing          | ✅ Completed                             |
-| Navigation                  | ✅ Completed                             |
-| Permission Handling         | ✅ Completed                             |
-| Native Chime Initialization | ⚠️ Blocked by third-party plugin        |
-| Audio/Video Communication   | Pending official native SDK integration |
+```
+User
+    │
+    ▼
+Enter Meeting ID
+    │
+    ▼
+Join API
+    │
+    ▼
+MeetingTokenResponse
+    │
+    ▼
+Combine with existing Meeting information
+    │
+    ▼
+Create JoinInfo
+    │
+    ▼
+Meeting Screen
+```
+
+---
+
+# Assumptions Made
+
+- Meeting creation is performed by an Agent.
+- Client joins using an existing Meeting ID.
+- Scheduled meetings are currently maintained in application state only.
+- The backend is responsible for generating Meeting IDs and attendee tokens.
+- Navigation occurs only after successful API responses.
+- The assessment API responses were considered as the source of truth.
+
+---
+
+# Development Approach
+
+The implementation was completed in multiple stages.
+
+### Stage 1
+
+- Project setup
+- Folder structure
+- Riverpod integration
+- Routing using GoRouter
+- API layer
+- Repository pattern
+
+### Stage 2
+
+- Create Meeting implementation
+- Join Meeting implementation
+- JSON models
+- Response parsing
+
+### Stage 3
+
+- Meeting screen integration
+- Amazon Chime package integration
+- JoinInfo mapping
+- Navigation flow
+
+### Stage 4
+
+- UI improvements
+- Bottom sheet for meeting options
+- Instant Meeting
+- Scheduled Meeting workflow
+- Scheduled Meetings screen
+
+### Stage 5
+
+- Error handling
+- Loading indicators
+- Snackbar notifications
+- Event logging
+
+---
+
+# Challenges Encountered
+
+During implementation, the following challenges were identified.
+
+### Amazon Chime Flutter Package
+
+The current Flutter package (`flutter_amazon_chime`) initializes successfully but does not complete the meeting connection.
+
+Observed behavior:
+
+- Meeting API succeeds.
+- JoinInfo is generated correctly.
+- Meeting screen opens.
+- Chime SDK remains in loading state.
+- Audio devices are not initialized.
+- Mute operation returns `ChimeException`.
+
+### API Response Differences
+
+The Create Meeting API returns the complete meeting information including:
+
+- MediaPlacement
+- MediaRegion
+- ExternalMeetingId
+
+Whereas the Join Meeting API returns only:
+
+- MeetingId
+- Attendee Token
+
+To support this, separate response models were introduced:
+
+- MeetingResponse
+- MeetingTokenResponse
+
+The application combines the stored meeting details with the attendee token to construct the required `JoinInfo`.
+
+---
+
+# Known Limitations
+
+- Scheduled meetings are stored in memory and are not persisted across application restarts.
+- Calendar scheduling functionality is currently represented as a UI workflow and does not integrate with a backend scheduler.
+- Due to limitations observed with the current Flutter Amazon Chime package, successful meeting initialization could not be fully verified despite receiving valid API responses.
+- The implementation currently focuses on the meeting lifecycle, state management, and API integration rather than advanced conferencing features.
+
+---
+
+# Technologies Used
+
+- Flutter
+- Dart
+- Riverpod
+- GoRouter
+- Dio
+- Freezed
+- JSON Serializable
+- Amazon Chime Flutter SDK
+- Logger
+
+---
+
+# Future Improvements
+
+- Native Amazon Chime SDK integration for Android and iOS using Platform Channels.
+- Persist scheduled meetings using local storage (Hive/SQLite).
+- Calendar integration for scheduled meetings.
+- Push notifications for upcoming meetings.
+- Meeting history.
+- Authentication and user profile management.
+- Unit and widget tests.
+- Improved meeting analytics and event tracking.
+
+---
+
+## Conclusion
+
+The assessment demonstrates a complete Flutter application architecture with Riverpod-based state management, clean separation of concerns, repository pattern, API integration, responsive UI, and meeting workflow implementation. While the meeting lifecycle and API interactions have been successfully implemented, the final media connection is currently limited by the behavior of the available Flutter Amazon Chime package. The codebase has been structured to support future replacement with native Amazon Chime SDK integration with minimal changes to the application architecture.

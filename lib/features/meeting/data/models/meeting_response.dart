@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'attendee.dart';
@@ -20,8 +21,10 @@ class MeetingResponse {
     required this.data,
   });
 
-  factory MeetingResponse.fromJson(Map<String, dynamic> json) =>
-      _$MeetingResponseFromJson(json);
+  factory MeetingResponse.fromJson(Map<String, dynamic> json) {
+    debugPrint("json :: $json");
+    return _$MeetingResponseFromJson(json);
+  }
 
   Map<String, dynamic> toJson() => _$MeetingResponseToJson(this);
 }
