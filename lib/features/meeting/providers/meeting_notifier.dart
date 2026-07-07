@@ -64,19 +64,6 @@ class MeetingNotifier extends StateNotifier<MeetingState> {
     );
 
     switch (result) {
-      /*case Success():
-        state = state.copyWith(
-          status: MeetingStatus.connected,
-          meeting: result.data,
-          launchType: launchType
-        );
-
-        debugPrint(jsonEncode(state.meeting!.toJson()));
-
-        // Automatically join Chime meeting
-        // await joinChimeMeeting();
-
-        break;*/
       case Success():
         final meeting = result.data;
 
@@ -112,12 +99,11 @@ class MeetingNotifier extends StateNotifier<MeetingState> {
     }
   }
 
-  /*Future<void> createMeeting(MeetingLaunchType launchType) async {
+  Future<void> createMeeting(MeetingLaunchType launchType) async {
     await _createOrJoinMeeting(type: "agent", launchType: launchType);
   }
-*/
 
-  Future<void> createMeeting(MeetingLaunchType launchType) async {
+  /*Future<void> createMeeting(MeetingLaunchType launchType) async {
     state = state.copyWith(status: MeetingStatus.joining, error: null);
 
     final result = await repository.createMeeting(type: "agent");
@@ -156,17 +142,17 @@ class MeetingNotifier extends StateNotifier<MeetingState> {
         );
         break;
     }
-  }
+  }*/
 
-  /* Future<void> joinMeeting(String meetingId) async {
+   Future<void> joinMeeting(String meetingId) async {
     await _createOrJoinMeeting(
       type: "client",
       meetingId: meetingId,
       launchType: MeetingLaunchType.instant,
     );
-  }*/
+  }
 
-  Future<void> joinMeeting(String meetingId, String type) async {
+  /*Future<void> joinMeeting(String meetingId, String type) async {
     state = state.copyWith(status: MeetingStatus.joining, error: null);
 
     final result = await repository.joinMeeting(
@@ -192,7 +178,7 @@ class MeetingNotifier extends StateNotifier<MeetingState> {
         );
         break;
     }
-  }
+  }*/
 
   /*Future<void> joinChimeMeeting() async {
     if (state.meeting == null) return;

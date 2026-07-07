@@ -30,7 +30,7 @@ class ScheduledMeetingsScreen extends ConsumerWidget {
                     onTap: () {
                       ref
                           .read(meetingNotifierProvider.notifier)
-                          .joinMeeting(meeting.meetingId,"agent");
+                          .joinMeeting(meeting.meetingId);
                     },
                   ),
                 );

@@ -39,7 +39,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     ref
         .read(meetingNotifierProvider.notifier)
-        .joinMeeting(_meetingIdController.text.trim(), "client");
+        .joinMeeting(_meetingIdController.text.trim());
   }
 
   @override
@@ -75,20 +75,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         _meetingIdController.clear();
 
         if (next.launchType == MeetingLaunchType.instant) {
-         // context.push(AppRoutes.meeting, extra: next.meeting?.toJoinInfo());
+          // context.push(AppRoutes.meeting, extra: next.meeting?.toJoinInfo());
 
           final notifier = ref.read(meetingNotifierProvider.notifier);
 
-          final joinInfo =
-          next.meetingTokenResp != null
+          final joinInfo = next.meetingTokenResp != null
               ? notifier.getJoinInfoForToken()
               : notifier.getJoinInfo();
 
-          context.push(
-            AppRoutes.meeting,
-            extra: joinInfo,
-          );
-
+          context.push(AppRoutes.meeting, extra: joinInfo);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Meeting scheduled successfully")),

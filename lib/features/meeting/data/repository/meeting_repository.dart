@@ -17,12 +17,12 @@ class MeetingRepository {
     String? meetingId,
   }) async {
     try {
-      /*final json = await apiService.createMeeting(
+      final json = await apiService.createMeeting(
         type: type,
         meetingId: meetingId,
-      );*/
+      );
       debugPrint("type repo:: $type \n meetingId : $meetingId");
-      if (type == 'agent' && meetingId == null) {
+      /* if (type == 'agent' && meetingId == null) {
         var json1 = {
           "status": "success",
           "message": "Meeting created successfully",
@@ -110,9 +110,9 @@ class MeetingRepository {
           },
         };
         return Success(MeetingResponse.fromJson(json3));
-      }
+      }*/
 
-      return Success(MeetingResponse.fromJson({}));
+      return Success(MeetingResponse.fromJson(json));
     } on ApiException catch (e) {
       return Failure(e.message);
     } catch (e, stackTrace) {
