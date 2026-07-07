@@ -379,5 +379,3 @@ The application combines the stored meeting details with the attendee token to c
 
 The assessment demonstrates a complete Flutter application architecture with Riverpod-based state management, clean separation of concerns, repository pattern, API integration, responsive UI, and meeting workflow implementation. While the meeting lifecycle and API interactions have been successfully implemented, the final media connection is currently limited by the behavior of the available Flutter Amazon Chime package. The codebase has been structured to support future replacement with native Amazon Chime SDK integration with minimal changes to the application architecture.
 
-
-![img.png](img.png)
